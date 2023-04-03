@@ -251,6 +251,67 @@ update_response = index.update(
     namespace="example-namespace"
 )
 ```
+# Performance tuning for upsering large datasets
+To upsert an entire dataset of vectors, we recommend using concurrent batched upsert requests. The following example shows how to do this using the `asyncio` library:
+```python
+import asyncio
+from pinecone import Client, Vector
+
+def chunker(seq, batch_size):
+    return (seq[pos:pos + batch_size] for pos in range(0, len(seq), batch_size))
+
+async def async_upload(index, vectors, batch_size, max_concurrent=50):
+    sem = asyncio.Semaphore(max_concurrent)
+    async def send_batch(batch):
+        async with sem:
+            return await index.upsert(vectors=batch, async_req=True)
+    
+    await asyncio.gather(*[send_batch(chunk) for chunk in chunker(vectors, batch_size=batch_size)]) 
+
+# To use it:
+client = Client()
+index = client.get_index("example-index")
+asyncio.run(async_upload(index, vectors, batch_size=100))
+
+# In a jypter notebook, asyncio.run() is not supported. Instead, use
+await async_upload(index, vectors, batch_size=100)  
+```
+
+#### TODO: Decide if we want to suggest this longer, more verbose version, which includes a progress bar and return type: 
+
+```python
+from tqdm.asyncio import tqdm
+import asyncio
+from pinecone import UpsertResponse, Client, Vector
+
+def chunker(seq, batch_size):
+    return (seq[pos:pos + batch_size] for pos in range(0, len(seq), batch_size))
+
+async def async_upload(index, vectors, batch_size, max_concurrent=50):
+    sem = asyncio.Semaphore(max_concurrent)
+    async def send_batch(batch):
+        async with sem:
+            return await index.upsert(vectors=batch, async_req=True)
+
+    tasks = [send_batch(chunk) for chunk in chunker(vectors, batch_size=batch_size)]
+    pbar = tqdm(total=len(vectors), desc="upserted vectors")
+    total_upserted_count = 0
+    for task in asyncio.as_completed(tasks):
+        res = await task
+        total_upserted_count += res.upserted_count
+        pbar.update(res.upserted_count)
+    return UpsertResponse(upserted_count=total_upserted_count)
+
+# To use it:
+client = Client()
+index = client.get_index("example-index")
+vectors = [Vector(id=f"vec{i}", values=[1.0, 2.0, 3.0]) for i in range(1000)]
+res = asyncio.run(async_upload(index, vectors, batch_size=100))
+
+# In a jypter notebook, asyncio.run() is not supported. Instead, use
+res = await async_upload(index, vectors, batch_size=100)  
+```
+
 # Limitations
 
 ## Code completion and type hints
