@@ -44,7 +44,7 @@ pinecone = Client() # This is now a `Client` instance
 index = pinecone.Index("example-index")
 index.upsert(...)
 ```
-(For more API changes see the [CHANGELOG.md](CHANGELOG.md))
+For more API changes see [CHANGELOG.md](CHANGELOG.md)
 
 # Usage
 ## Control plane opeations
