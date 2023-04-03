@@ -1,0 +1,42 @@
+[build-system]
+requires = ["maturin>=0.14,<0.15"]
+build-backend = "maturin"
+
+[project]
+version = "3.0.0rc2" # TODO: remove this key completely once we have a stable release. Version is taken automatically from Cargo.toml.
+name = "pinecone-client"
+description="Pinecone client and SDK"
+requires-python = ">=3.7"
+keywords=["Pinecone", "vector", "database", "cloud"]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: Other/Proprietary License",
+    "Topic :: Database",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+test = [
+    "loguru==0.6.0",
+    "numpy==1.24.2",
+    "pytest==6.2.5",
+    "pytest-asyncio==0.16.0",
+    "pytest-timeout==1.4.2",
+    "pytest-html==3.1.1",
+    "pytest-xdist[psutil]==2.5.0",
+    "requests==2.25.1",
+    "testcontainers==3.4.1",
+    "inflection==0.5.1",
+]
+
+

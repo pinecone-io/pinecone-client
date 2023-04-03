@@ -1,0 +1,9 @@
+[workspace]
+members = [
+ "client_sdk",
+ "pinecone",
+ "index_service"
+]
+
+[workspace.package]
+version = "3.0.0"

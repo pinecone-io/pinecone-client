@@ -1,0 +1,29 @@
+[package]
+name = "client_sdk"
+version.workspace = true
+edition = "2021"
+repository = "https://github.com/" # TODO
+description = "SDK of the client" # TODO
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+bench = false
+
+[dependencies]
+prost = "0.11"
+prost-types = "0.11.0"
+reqwest = { version = "0.11.13", features = ["json"]}
+serde = { version = "1.0.152", features = ["derive"]}
+serde_json = "1.0.91"
+thiserror = "1.0.38"
+tokio = { version = "1.16.1", features = ["rt-multi-thread"] }
+tonic = { version = "0.8", features = ["tls", "tls-roots"] }
+webpki-roots = "0.22.6"
+pyo3 = { version = "0.18.0", features = ["extension-module"] }
+derivative = "2.2.0"
+index_service = { version = "0.1.0", path = "../index_service" }
+openssl = { version = "0.10", features = ["vendored"] }
+
+[build-dependencies]
+tonic-build = "0.8"

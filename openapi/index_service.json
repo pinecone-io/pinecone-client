@@ -1,0 +1,644 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "defaultTitle",
+      "description": "defaultDescription",
+      "version": "0.1"
+    },
+    "tags": [
+      {
+        "name": "Index Operations"
+      }
+    ],
+    "servers": [
+      {
+        "url": "https://controller.{environment}.pinecone.io"
+      }
+    ],
+    "paths": {
+      "/collections": {
+        "get": {
+          "operationId": "list_collections",
+          "description": "This operation returns a list of your Pinecone collections.",
+          "responses": {
+            "200": {
+              "description": "This operation returns a list of all the collections in your current project.",
+              "content": {
+                "application/json; charset=utf-8": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "post": {
+          "operationId": "create_collection",
+          "description": "This operation creates a Pinecone collection.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createCollectionRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "The collection has been successfully created.",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request. Request exceeds quota or collection name is invalid."
+            },
+            "409": {
+              "description": "A collection with the name provided already exists."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "servers": [
+          {
+            "url": "https://controller.{environment}.pinecone.io",
+            "variables": {
+              "environment": {
+                "default": "unknown"
+              }
+            }
+          }
+        ]
+      },
+      "/collections/{collectionName}": {
+        "get": {
+          "operationId": "describe_collection",
+          "description": "Get a description of a collection.",
+          "parameters": [
+            {
+              "name": "collectionName",
+              "required": true,
+              "in": "path",
+              "description": "The name of the collection",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Configuration information and deployment status of the index",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/collectionMeta"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Index not found."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "delete": {
+          "operationId": "delete_collection",
+          "description": "This operation deletes an existing collection.",
+          "parameters": [
+            {
+              "name": "collectionName",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "description": "The name of the collection"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "The index has been successfully deleted.",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Collection not found."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "servers": [
+          {
+            "url": "https://controller.{environment}.pinecone.io",
+            "variables": {
+              "environment": {
+                "default": "unknown"
+              }
+            }
+          }
+        ]
+      },
+      "/databases": {
+        "get": {
+          "operationId": "list_indexes",
+          "description": "This operation returns a list of your Pinecone indexes.",
+          "responses": {
+            "200": {
+              "description": "This operation returns a list of all the indexes that you have previously created, and which are associated with the given API key",
+              "content": {
+                "application/json; charset=utf-8": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "post": {
+          "operationId": "create_index",
+          "description": "This operation creates a Pinecone index. You can use it to specify the measure of similarity, the dimension of vectors to be stored in the index, the numbers of shards and replicas to use, and more.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "The index has been successfully created",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request. Encountered when request exceeds quota or an invalid index name."
+            },
+            "409": {
+              "description": "Index of given name already exists."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "servers": [
+          {
+            "url": "https://controller.{environment}.pinecone.io",
+            "variables": {
+              "environment": {
+                "default": "unknown"
+              }
+            }
+          }
+        ]
+      },
+      "/databases/{indexName}": {
+        "get": {
+          "operationId": "describe_index",
+          "description": "Get a description of an index.",
+          "parameters": [
+            {
+              "name": "indexName",
+              "required": true,
+              "in": "path",
+              "description": "The name of the index",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Configuration information and deployment status of the index",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/indexMeta"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Index not found"
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "delete": {
+          "operationId": "delete_index",
+          "description": "This operation deletes an existing index.",
+          "parameters": [
+            {
+              "name": "indexName",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "description": "The name of the index"
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "The index has been successfully deleted.",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Index not found."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "patch": {
+          "operationId": "configure_index",
+          "description": "This operation specifies the pod type and number of replicas for an index.",
+          "parameters": [
+            {
+              "name": "indexName",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              },
+              "description": "The name of the index"
+            }
+          ],
+          "requestBody": {
+            "description": "The desired pod type and replica configuration for the index.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/patchRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "202": {
+              "description": "The index has been successfully updated",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Index not found."
+            },
+            "400": {
+              "description": "Bad request,not enough quota."
+            },
+            "500": {
+              "description": "Internal error. Can be caused by invalid parameters."
+            }
+          },
+          "tags": [
+            "Index Operations"
+          ]
+        },
+        "servers": [
+          {
+            "url": "https://controller.{environment}.pinecone.io",
+            "variables": {
+              "environment": {
+                "default": "unknown"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "components": {
+      "schemas": {
+        "createRequest": {
+          "type": "object",
+          "required": [
+            "name",
+            "dimension"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the index to be created. The maximum length is 45 characters.",
+              "example": "example-index"
+            },
+            "dimension": {
+              "type": "integer",
+              "description": "The dimensions of the vectors to be inserted in the index",
+              "example": 1024
+            },
+            "index_type": {
+              "type": "string",
+              "description": "The type of vector index. Pinecone supports 'approximated'.",
+              "default": "approximated",
+          "deprecated":true
+            },
+            "metric": {
+              "type": "string",
+              "description": "The distance metric to be used for similarity search. You can use 'euclidean', 'cosine', or 'dotproduct'.",
+              "default": "cosine"
+            },
+            "pods": {
+              "type": "integer",
+              "description": "The number of pods for the index to use,including replicas.",
+              "default": 1
+            },
+            "replicas": {
+              "type": "integer",
+              "description": "The number of replicas. Replicas duplicate your index. They provide higher availability and throughput.",
+              "default": 1
+            },
+            "shards": {
+              "type": "integer",
+              "description": "The number of shards to be used in the index.",
+              "default": 1
+            },
+            "pod_type": {
+              "type": "string",
+          "description": "The type of pod to use. One of `s1`, `p1`, or `p2` appended with `.` and one of `x1`, `x2`, `x4`, or `x8`.",
+              "default": "p1.x1"
+            },
+            "index_config": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ApproximatedConfig"
+                }
+              ],
+          "deprecated":true
+            },
+            "metadata_config": {
+              "type": "object",
+              "description": "Configuration for the behavior of Pinecone's internal metadata index. By default, all metadata is indexed; when `metadata_config` is present, only specified metadata fields are indexed. To specify metadata fields to index, provide a JSON object of the following form: \n  ``` \n {\"indexed\": [\"example_metadata_field\"]} \n ``` ",
+              "nullable": true,
+              "properties" : {
+                "indexed": {
+                  "type": "array",
+                  "description": "A list of metadata fields to index.",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "source_collection": {
+              "type": "string",
+              "description": "The name of the collection to create an index from"
+            }
+          }
+        },
+        "createCollectionRequest": {
+          "type": "object",
+          "required": [
+            "name",
+            "source"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the collection to be created.",
+              "example": "example-collection"
+            },
+            "source": {
+              "type": "string",
+              "description": "The name of the source index to be used as the source for the collection.",
+              "example": "example-source-index"
+            }
+          }
+        },
+        "collectionMeta": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "example-collection"
+            },
+            "size": {
+              "type": "integer",
+              "description": "The size of the collection in bytes.",
+              "example": 1
+            },
+            "status": {
+              "type": "string",
+              "description": "The status of the collection.",
+              "example": "created"
+            },
+            "dimension": {
+              "type": "integer",
+              "description": "The dimension of the vectors in the collection.",
+              "example": 1024
+            },
+            "vector_count": {
+              "type": "integer",
+              "description": "The number of vectors in the collection.",
+              "example": 1
+            }
+          }
+        },
+        "indexMeta": {
+          "type": "object",
+          "properties": {
+            "database": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "dimension": {
+                  "type": "integer"
+                },
+                "index_type": {
+                  "type": "string",
+          "deprecated":true
+                },
+                "metric": {
+                  "type": "string"
+                },
+                "pods": {
+                  "type": "integer"
+                },
+                "replicas": {
+                  "type": "integer"
+                },
+                "shards": {
+                  "type": "integer"
+                },
+                "pod_type": {
+                  "type": "string"
+                },
+                "index_config": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ApproximatedConfig"
+                    }
+                  ]
+                },
+                "metadata_config": {
+                  "type": "object",
+                  "properties" : {
+                    "indexed": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+            "source_collection": {
+              "type": "string"
+              }
+            }
+          },
+          "status": {
+            "type": "object",
+            "properties": {
+              "ready": {
+                "type": "boolean"
+              },
+              "message": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+        "patchRequest": {
+          "type": "object",
+          "properties": {
+            "replicas": {
+              "type": "integer",
+              "description" : "The desired number of replicas for the index.",
+              "example": 3
+            },
+            "pod_type": {
+              "type" : "string",
+              "description" : "The new pod type for the index. One of `s1`, `p1`, or `p2` appended with `.` and one of `x1`, `x2`, `x4`, or `x8`.",
+              "example" : "s1.x2"
+            }
+          }
+        },
+        "HnswConfig": {
+          "type": "object",
+          "properties": {
+            "ef_construction": {
+              "type": "integer",
+              "default": 500
+            },
+            "ef": {
+              "type": "integer",
+              "default": 250
+            },
+            "M": {
+              "type": "integer",
+              "default": 12
+            },
+            "max_elements": {
+              "type": "integer",
+              "default": 50000000
+            }
+          }
+        },
+        "ApproximatedConfig": {
+          "type": "object",
+          "properties": {
+            "k_bits": {
+              "type": "integer",
+              "default": 512
+            },
+            "hybrid": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "name": "Api-Key",
+          "in": "header"
+        }
+      }
+    },
+    "security": [
+      {
+        "ApiKeyAuth": []
+      }
+    ],
+    "externalDocs": {
+      "description": "More Pinecone.io API docs",
+      "url": "https://www.pinecone.io/docs"
+    }
+  }
