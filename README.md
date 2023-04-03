@@ -68,7 +68,8 @@ client = Client(api_key = 'YOUR_API_KEY', region = 'us-west1-gcp')
 ### Creating an index
 
 The following example creates an index without a metadata
-configuration. By default, Pinecone indexes all metadata.
+configuration.  
+By default, all metadata fields are indexed.
 
 ```python
 
@@ -76,12 +77,13 @@ from pinecone import Client
 
 client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
 
-client.create_index("example-index", dimension=1024)
+index = client.create_index("example-index", dimension=1024)
 ```
 
+If some of the metadata fields contain data payload such as raw text, indexing them would make the Pinecone less efficient.  
+In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
 The following example creates an index that only indexes
-the "color" metadata field. Queries against this index
-cannot filter based on any other metadata field.
+the "color" metadata field. 
 
 ```python
 metadata_config = {
@@ -224,7 +226,7 @@ query_response = index.query(
 index.delete(ids=["vec1", "vec2"], namespace="example-namespace")
 
 # Delete vectors by metadata filters
-index.delete(filter={"genre": {"$in": ["comedy", "documentary", "drama"]}}, namespace="example-namespace")
+index.delete_by_metadata(filter={"genre": {"$in": ["comedy", "documentary", "drama"]}}, namespace="example-namespace")
 
 # Delete all vectors in a given namespace (use namespace="" to delete all vectors in the DEFAULT namespace)
 index.delete_all(namespace="example-namespace")
