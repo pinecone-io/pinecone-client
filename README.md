@@ -47,7 +47,7 @@ index.upsert(...)
 For more API changes see [CHANGELOG.md](CHANGELOG.md)
 
 # Usage
-## Control plane opeations
+## Control plane operations
 ### Creating a Client instance
 The `Client` is the main entry point for control operations like creating, deleting and configuring pinecone indexes.  
 Initializing a `Client` requires your Pinecone API key and a region, which can be passed as either environment variables or as parameters to the `Client` constructor.
@@ -67,8 +67,8 @@ client = Client(api_key = 'YOUR_API_KEY', region = 'us-west1-gcp')
 
 ### Creating an index
 
-The following example creates an index without a metadata
-configuration.  
+The following example creates an index without a metadata configuration.  
+
 By default, all metadata fields are indexed.
 
 ```python
@@ -80,10 +80,9 @@ client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
 index = client.create_index("example-index", dimension=1024)
 ```
 
-If some of the metadata fields contain data payload such as raw text, indexing them would make the Pinecone less efficient.  
-In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
-The following example creates an index that only indexes
-the "color" metadata field. 
+If some of the metadata fields contain data payload such as raw text, indexing them would make the Pinecone less efficient. In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
+
+The following example creates an index that only indexes the `"color"` metadata field. 
 
 ```python
 metadata_config = {
@@ -253,7 +252,7 @@ update_response = index.update(
     namespace="example-namespace"
 )
 ```
-# Performance tuning for upsering large datasets
+# Performance tuning for upserting large datasets
 To upsert an entire dataset of vectors, we recommend using concurrent batched upsert requests. The following example shows how to do this using the `asyncio` library:
 ```python
 import asyncio
