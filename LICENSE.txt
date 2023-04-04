@@ -29,37 +29,15 @@ BY DOWNLOADING, INSTALLING OR USING THE LICENSED SOFTWARE,  YOU AGREE TO BE BOUN
 
 Open-Source Code Included in Pinecone-io Python Library
 
-Last Updated: September 20, 2021
+Last Updated: April 4, 2023
 
+MIT License (https://github.com/tokio-rs/tokio/blob/master/LICENSE)
 
-3-clause BSD License (https://raw.githubusercontent.com/networkx/networkx/master/LICENSE.txt)
+   * Software: tokio - Version 1.16.1 or greater (https://github.com/tokio-rs/tokio)
 
-   * Software: grpc-gateway-protoc-gen-openapiv2 - Version 0.1.0 (https://github.com/grpc-ecosystem/grpc-gateway)
-   * Software: protobuf - Version 3.13.0 (https://pypi.org/project/protobuf/)
-   * Software: lz4 - Version 3.1.3 (https://pypi.org/project/lz4/)
-   * Software: numpy - Version between 1.18.5 and 1.20.0 (https://github.com/numpy/numpy)
+Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-2-clause BSD License (https://raw.githubusercontent.com/getsentry/sentry-python/master/LICENSE)
+   * Software: reqwest - Version 0.11.6 (https://github.com/seanmonstar/reqwest)
+   * Software: pyo3 - Version 0.18.0 (https://github.com/PyO3/pyo3)
+   * Software: pyo3-asyncio - Version 0.18.0 (https://github.com/awestlake87/pyo3-asyncio)
 
-   * Software: sentry-sdk - Version 1.0.0 or greater (https://github.com/getsentry/sentry-python)
-
-MIT License (https://raw.githubusercontent.com/urllib3/urllib3/main/LICENSE.txt)
-
-   * Software: urllib3 - Version 1.21.1 or greater (https://github.com/urllib3/urllib3)
-   * Software: pyyaml - Version 5.4 or greater (https://github.com/yaml/pyyaml/)
-   * Software: loguru - Version 0.5.0 or greater (https://github.com/Delgan/loguru)
-
-Apache License 2.0 (https://raw.githubusercontent.com/grpc/grpc/master/LICENSE)
-
-   * Software: grpcio - Version 1.37.1 (https://pypi.org/project/grpcio/)
-   * Software: googleapis-common-protos - Version 1.53.0 (https://github.com/googleapis/api-common-protos)
-   * Software: requests - Version 2.19.0 or greater (https://github.com/psf/requests)
-   * Software: python_dateutil - Version 2.5.3 or greater (https://github.com/dateutil/dateutil)
-
-Python Software Foundation License (PSF) (https://raw.githubusercontent.com/python/typing/master/typing_extensions/LICENSE)
-
-   * Software: typing-extensions - Version 3.7.4 or greater (https://pypi.org/project/typing-extensions/)
-
-ISC License (https://opensource.org/licenses/ISC)
-
-   * Software: dnspython - Version 2.0.0 or greater (https://www.dnspython.org/)
