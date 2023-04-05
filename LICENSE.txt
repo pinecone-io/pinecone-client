@@ -35,9 +35,23 @@ MIT License (https://github.com/tokio-rs/tokio/blob/master/LICENSE)
 
    * Software: tokio - Version 1.16.1 or greater (https://github.com/tokio-rs/tokio)
 
+   
+
 Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
 
    * Software: reqwest - Version 0.11.6 (https://github.com/seanmonstar/reqwest)
    * Software: pyo3 - Version 0.18.0 (https://github.com/PyO3/pyo3)
    * Software: pyo3-asyncio - Version 0.18.0 (https://github.com/awestlake87/pyo3-asyncio)
+   * Software: prost - Version 0.11 (https://github.com/tokio-rs/prost)
+   * Software: prost-types - Version 0.11.0 
+   * Software: serde - Version 1.0.152 (https://github.com/serde-rs/serde)
+   * Software: derivative - Version 2.2.0 (https://github.com/mcarton/rust-derivative)
+   * Software: openssl - Version 0.10 (https://github.com/sfackler/rust-openssl)
+   * Software: url - Version 2.2 or greater (https://github.com/servo/rust-url)
+   * Software: uuid - Version 1.0 or greater (https://github.com/uuid-rs/uuid)
+   * Software: openapi-generator-cli Version 2.0.0 or greater (https://github.com/OpenAPITools/openapi-generator-cli)
 
+Mozilla Public License 2.0 (http://mozilla.org/MPL/2.0)
+
+  * Software: webpki_roots - Version 0.22.6 (https://github.com/rustls/webpki-roots)
+  
