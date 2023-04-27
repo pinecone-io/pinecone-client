@@ -14,7 +14,7 @@ As the client installation is fully self-contained, it does not require any addi
 > **_⚠️ Warning_**
 >
 > This is a **public preview** ("Beta") version. Please test it thoroughly before using it in production.    
-> Some functionalities are not backwards compatible with the previous versions of the client, please refer to the [cahangelog]() for more details.
+> Some functionalities are not backwards compatible with the previous versions of the client, please refer to the [CHANGELOG.md](CHANGELOG.md) for more details.
 
 ## Installation
 
@@ -47,9 +47,9 @@ index.upsert(...)
 For more API changes see [CHANGELOG.md](CHANGELOG.md)
 
 # Usage
-## Control plane opeations
+## Index operations
 ### Creating a Client instance
-The `Client` is the main entry point for control operations like creating, deleting and configuring pinecone indexes.  
+The `Client` is the main entry point for index operations like creating, deleting and configuring pinecone indexes.  
 Initializing a `Client` requires your Pinecone API key and a region, which can be passed as either environment variables or as parameters to the `Client` constructor.
 
 ```python
@@ -80,10 +80,9 @@ client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
 index = client.create_index("example-index", dimension=1024)
 ```
 
-If some of the metadata fields contain data payload such as raw text, indexing them would make the Pinecone less efficient.  
+If some metadata fields contain data payload such as raw text. Indexing these fields would make the Pinecone index less efficient.  
 In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
-The following example creates an index that only indexes
-the "color" metadata field. 
+The following example creates an index that only indexes the "color" metadata field. 
 
 ```python
 metadata_config = {
@@ -126,9 +125,9 @@ The following example changes the number of replicas for `example-index`.
 new_number_of_replicas = 4
 client.scale_index("example-index", replicas=new_number_of_replicas)
 ```
-## Data plane operations
+## Vector operations
 ### Creating an Index instance
-The index object is the entry point for data operations like upserting, querying and deleting vectors.
+The index object is the entry point for vector operations like upserting, querying and deleting vectors to a given Pinecone index.
 ```python
 from pinecone import Client
 client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
@@ -186,7 +185,7 @@ upsert_response = index.upsert(
 )
 ```
 
-#### Quering an index by a new unseen vector
+#### Querying an index by a new unseen vector
 
 The following example queries the index `example-index` with metadata
 filtering.
@@ -205,7 +204,7 @@ query_response = index.query(
 )
 ```
 
-#### Quering an index by an existing vector ID
+#### Querying an index by an existing vector ID
 
 The following example queries the index `example-index` for the `top_k=10` nearest neighbors of the vector with ID `vec1`.
 
@@ -253,7 +252,7 @@ update_response = index.update(
     namespace="example-namespace"
 )
 ```
-# Performance tuning for upsering large datasets
+# Performance tuning for upserting large datasets
 To upsert an entire dataset of vectors, we recommend using concurrent batched upsert requests. The following example shows how to do this using the `asyncio` library:
 ```python
 import asyncio
@@ -275,7 +274,7 @@ client = Client()
 index = client.get_index("example-index")
 asyncio.run(async_upload(index, vectors, batch_size=100))
 
-# In a jypter notebook, asyncio.run() is not supported. Instead, use
+# In a jupyter notebook, asyncio.run() is not supported. Instead, use
 await async_upload(index, vectors, batch_size=100)  
 ```
 
@@ -310,7 +309,7 @@ index = client.get_index("example-index")
 vectors = [Vector(id=f"vec{i}", values=[1.0, 2.0, 3.0]) for i in range(1000)]
 res = asyncio.run(async_upload(index, vectors, batch_size=100))
 
-# In a jypter notebook, asyncio.run() is not supported. Instead, use
+# In a jupyter notebook, asyncio.run() is not supported. Instead, use
 res = await async_upload(index, vectors, batch_size=100)  
 ```
 
@@ -320,4 +319,4 @@ res = await async_upload(index, vectors, batch_size=100)
 Due to limitations with the underlying `pyo3` library, code completion and type hints are not available in some IDEs, or might require additional configuration.
 - **Jupyter notebooks**: Should work out of the box
 - **VSCode**: Change the [`languageServer`](https://code.visualstudio.com/docs/python/settings-reference#_intellisense-engine-settings) setting to `jedi`
-- **PyCharm**: For the moment, all fucntion signatures would show `(*args, **kwargs)`. We are working on a solution ASAP. (Function docstrings would still show full arguments and type hints)
+- **PyCharm**: For the moment, all function signatures would show `(*args, **kwargs)`. We are working on a solution ASAP. (Function docstrings would still show full arguments and type hints)
