@@ -47,7 +47,9 @@ index.upsert(...)
 For more API changes see [CHANGELOG.md](CHANGELOG.md)
 
 # Usage
+
 ## Index operations
+
 ### Creating a Client instance
 The `Client` is the main entry point for index operations like creating, deleting and configuring pinecone indexes.  
 Initializing a `Client` requires your Pinecone API key and a region, which can be passed as either environment variables or as parameters to the `Client` constructor.
@@ -67,8 +69,8 @@ client = Client(api_key = 'YOUR_API_KEY', region = 'us-west1-gcp')
 
 ### Creating an index
 
-The following example creates an index without a metadata
-configuration.  
+The following example creates an index without a metadata configuration.  
+
 By default, all metadata fields are indexed.
 
 ```python
@@ -80,9 +82,9 @@ client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
 index = client.create_index("example-index", dimension=1024)
 ```
 
-If some metadata fields contain data payload such as raw text. Indexing these fields would make the Pinecone index less efficient.  
-In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
-The following example creates an index that only indexes the "color" metadata field. 
+If some metadata fields contain data payload such as raw text, indexing these fields would make the Pinecone index less efficient.  In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
+
+The following example creates an index that only indexes the `"color"` metadata field. 
 
 ```python
 metadata_config = {
