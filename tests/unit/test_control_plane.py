@@ -3,14 +3,14 @@ import os
 from pinecone import Client
 import pytest
 from time import time
-
-from utils.utils import retry_assert
-from utils.remote_index import PodType
+import numpy as np 
+from ..utils.utils import retry_assert
+from ..utils.remote_index import PodType
 
 env = os.getenv('PINECONE_REGION')
 key = os.getenv('PINECONE_API_KEY')
 client = Client(key, env)
-INDEX_NAME_PREFIX = 'control-plane'
+INDEX_NAME_PREFIX = 'control-plane-' + str(np.random.randint(10000))
 d = 512
 
 INDEX_NAME_KEY = 'index_name'
@@ -43,7 +43,56 @@ def index_fixture(testrun_uid, request):
 
     yield index_name, f"{pod_type}.x1" if pod_type.is_implicitly_x1() else str(pod_type)
 
+# The client interface
+def test_client_valid_params():
+    # assert no error is raised
+    pinecone = Client(api_key='api_key', region='env',project_id='project_id')
 
+def test_env_vars():
+    # assuming tess are run with env vars set
+    pinecone = Client()
+
+@pytest.fixture(scope="function")
+def set_api_key_env_var(testrun_uid):
+    old_key = os.environ.get('PINECONE_API_KEY')
+    os.environ['PINECONE_API_KEY'] = "non-existent-key"
+    yield old_key
+    if old_key is not None:
+        os.environ['PINECONE_API_KEY'] = old_key
+
+@pytest.fixture(scope="function")
+def set_region_env_var(testrun_uid):
+    old_region = os.environ.get('PINECONE_REGION')
+    os.environ['PINECONE_REGION'] = "non-existent-region"
+    yield old_region
+    if old_region is not None:
+        os.environ['PINECONE_REGION'] = old_region
+
+def test_env_vars_missing_api_key(set_api_key_env_var):
+    with pytest.raises(ConnectionError):
+        pinecone = Client()
+
+def test_env_vars_missing_region(set_region_env_var):
+    with pytest.raises(ConnectionError):
+        pinecone = Client()
+
+def test_env_var_override(set_api_key_env_var, set_region_env_var):
+    assert os.environ['PINECONE_API_KEY'] == "non-existent-key"
+    assert os.environ['PINECONE_REGION'] == "non-existent-region"
+    pinecone = Client(api_key=set_api_key_env_var, region=set_region_env_var)
+    pinecone.list_indexes()
+
+# def test_env_var_override_region(set_region_env_var):
+#     assert os.environ['PINECONE_REGION'] == "non-existent-region"
+#     pinecone = Client(region=set_region_env_var)
+#     pinecone.list_indexes()
+def test_client_invalid_params():
+    with pytest.raises(TypeError):
+        pinecone = Client(random_param='random_param')
+
+def test_client_invalid_region():
+    with pytest.raises(ConnectionError):
+        pinecone = Client(region='invalid_region')
 
 def test_missing_dimension():
     # Missing Dimension

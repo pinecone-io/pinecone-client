@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from pinecone import Client, Vector, SparseValues
 import os
-from utils.remote_index import RemoteIndex, PodType
-from utils.utils import index_fixture_factory, retry_assert
+from ..utils.remote_index import RemoteIndex, PodType
+from ..utils.utils import index_fixture_factory, retry_assert
 
 vector_dim = 512
 env = os.getenv('PINECONE_REGION')

@@ -10,8 +10,8 @@ import pytest
 from loguru import logger
 
 from pinecone import Vector, SparseValues
-from utils.remote_index import RemoteIndex, PodType
-from utils.utils import retry_assert, index_fixture_factory
+from ..utils.remote_index import RemoteIndex, PodType
+from ..utils.utils import retry_assert, index_fixture_factory
 
 logger.remove()
 logger.add(sys.stdout, level=(os.getenv("PINECONE_LOGGING") or "INFO"))
