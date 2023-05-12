@@ -1,7 +1,7 @@
 [workspace]
 members = [
  "client_sdk",
- "pinecone",
+ "clients/python",
  "index_service"
 ]
 

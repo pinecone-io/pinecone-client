@@ -11,7 +11,7 @@ $(VENV_DIR)/bin/activate:
 develop: venv
 	. $(VENV_DIR)/bin/activate; cd pinecone && pip3 install -e .[test]
 
-integration-test: venv develop
+integration-test-python: venv develop
 	. $(VENV_DIR)/bin/activate; cd tests/unit && pytest --self-contained-html --dist=loadscope --numprocesses 4 --durations=10 --durations-min=1.0  --html=report.html
 	$(MAKE) finish
 

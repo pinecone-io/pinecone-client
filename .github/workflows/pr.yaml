@@ -21,12 +21,12 @@ jobs:
       - name: Install protoc
         run: sudo apt install -y protobuf-compiler libprotobuf-dev
       - name: Run rustfmt check
-        run: cargo fmt -p pinecone -p client_sdk -- --check
+        run: cargo fmt -p pinecone_python_client -p client_sdk -- --check
       - name: Run clippy
-        run: cargo clippy -p pinecone -p client_sdk --tests --benches --examples --bins -- -D warnings
+        run: cargo clippy -p pinecone_python_client -p client_sdk --tests --benches --examples --bins -- -D warnings
       - name: Run cargo tests
         if: false # TODO: Fix tests
-        run: cargo test -p pinecone -p client_sdk
+        run: cargo test -p pinecone_python_client -p client_sdk
 
   python-tests:
     name: Integration Tests
@@ -44,8 +44,7 @@ jobs:
       - name: Install protoc
         run: sudo apt install -y protobuf-compiler libprotobuf-dev
       - name: Run integration tests
-        run:
-          make integration-test
+        run: make integration-test-python
       - name: Upload HTML report as artifact
         if: always()
         uses: actions/upload-artifact@v2

@@ -49,7 +49,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install as editable package
-cd pinecone 
+cd clients/python 
 pip install -e .
 
 # optionallly, install test dependencies and run tests:
@@ -66,12 +66,12 @@ source venv/bin/activate
 pip install maturin
 
 # Install pinecone package for development
-cd pinecone
+cd clients/python
 maturin develop
 ```
 #### Building a wheel for deployment
 ```bash
-cd pinecone
+cd clients/python
 maturin build --release
 ```
 ### Building rust library for linking with other languages
