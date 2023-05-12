@@ -19,3 +19,5 @@ index_service/
 # Python stuff
 env/
 venv/
+.temp_venv/
+.temp_env/
