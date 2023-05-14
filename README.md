@@ -8,13 +8,13 @@
 A python client for Pinecone. For more information, see the docs at https://www.pinecone.io/docs/
 
 Pinecone Client V3 is based on pre-compiled Rust code and gRPC, aimed at improving performance and stability.
-Using native gRPC transport, client V3 is able to achieve a 2x-3x speedup for vector upsert over the previous Rest-based client versions, as well as a 10-20% speedup for vector query latency.
-As the client installation is fully self-contained, it does not require any additional dependencies (e.g. `grpcio`), making it easier to install and use in any python environment.
+Using native gRPC transport, client V3 is able to achieve a 2x-3x speedup for vector upsert over the previous RESTful client versions, as well as a 10-20% speedup for vector query latency.
+As the client installation is fully self-contained, it does not require any additional dependencies (e.g. `grpcio`), making it easier to install and use in any Python environment.
 
 > **_⚠️ Warning_**
 >
 > This is a **public preview** ("Beta") version. Please test it thoroughly before using it in production.    
-> Some functionalities are not backwards compatible with the previous versions of the client, please refer to the [CHANGELOG.md](CHANGELOG.md) for more details.
+> Some functionalities are not backwards compatible with the previous versions of the client. Refer to the [CHANGELOG.md](CHANGELOG.md) for more details.
 
 ## Installation
 
@@ -26,7 +26,7 @@ pip3 install pinecone-client==3.0.0rc2
 ## Building from source and contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## Migrating from pinecone client V2
+## Migrating from Pinecone client V2
 If you are migrating from pinecone client V2, here is the most minimal code change required to upgrade to V3:
 ```python
 # Pinecone client V2
@@ -47,9 +47,11 @@ index.upsert(...)
 For more API changes see [CHANGELOG.md](CHANGELOG.md)
 
 # Usage
+
 ## Index operations
+
 ### Creating a Client instance
-The `Client` is the main entry point for index operations like creating, deleting and configuring pinecone indexes.  
+The `Client` is the main entry point for index operations like creating, deleting and configuring Pinecone indexes.  
 Initializing a `Client` requires your Pinecone API key and a region, which can be passed as either environment variables or as parameters to the `Client` constructor.
 
 ```python
@@ -67,8 +69,8 @@ client = Client(api_key = 'YOUR_API_KEY', region = 'us-west1-gcp')
 
 ### Creating an index
 
-The following example creates an index without a metadata
-configuration.  
+The following example creates an index without a metadata configuration.  
+
 By default, all metadata fields are indexed.
 
 ```python
@@ -80,9 +82,9 @@ client = Client(api_key="YOUR_API_KEY", region="us-west1-gcp")
 index = client.create_index("example-index", dimension=1024)
 ```
 
-If some metadata fields contain data payload such as raw text. Indexing these fields would make the Pinecone index less efficient.  
-In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
-The following example creates an index that only indexes the "color" metadata field. 
+If some metadata fields contain data payload such as raw text, indexing these fields would make the Pinecone index less efficient.  In such cases, it is recommended to configure the index to only index specific metadata fields which are used for query filtering.  
+
+The following example creates an index that only indexes the `"color"` metadata field. 
 
 ```python
 metadata_config = {
@@ -281,6 +283,6 @@ await async_upload(index, vectors, batch_size=100)
 
 ## Code completion and type hints
 Due to limitations with the underlying `pyo3` library, code completion and type hints are not available in some IDEs, or might require additional configuration.
-- **Jupyter notebooks**: Should work out of the box
-- **VSCode**: Change the [`languageServer`](https://code.visualstudio.com/docs/python/settings-reference#_intellisense-engine-settings) setting to `jedi`
-- **PyCharm**: For the moment, all function signatures would show `(*args, **kwargs)`. We are working on a solution ASAP. (Function docstrings would still show full arguments and type hints)
+- **Jupyter notebooks**: Should work out of the box.
+- **VSCode**: Change the [`languageServer`](https://code.visualstudio.com/docs/python/settings-reference#_intellisense-engine-settings) setting to `jedi`.
+- **PyCharm**: For the moment, all function signatures would show `(*args, **kwargs)`. We are working on a solution ASAP. (Function docstrings would still show full arguments and type hints).

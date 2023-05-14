@@ -36,7 +36,7 @@
 4. **Generate OpenAPI client** (Optional, usually done automatically at build time)
    
    Pinecone uses an OpenAPI spec for control-plane operations like `create_index()`. The OpenAPI client is automatically generated using [openapi-generator](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/rust-server.md) during project build.
-   This process uses docker to `docker run` OpenAPI's generator image.  
+   This process uses Docker to `docker run` OpenAPI's generator image.  
    **If you don't have docker installed, or you don't want to use docker** -  you can download the generated code from the [latest release](https://github.com/pinecone-io/pinecone-client/releases). 
    Simply extract the `index_service.zip` file into the `index_service/` folder at the root of the project.
 
