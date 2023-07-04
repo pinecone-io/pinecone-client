@@ -28,8 +28,10 @@ pub fn convert_upsert_enum_to_vectors(
     let vectors_to_upsert: Vec<core_data_types::Vector> = vectors.into_iter().enumerate().map(|(i, vec)| {
             let new_vec: PineconeResult<core_data_types::Vector> = match vec.to_owned() {
                 UpsertRecord::Vector(v) => Ok(v),
-                UpsertRecord::TwoTuple(t) => Ok(core_data_types::Vector{ id: t.0, values: t.1 , ..Default::default()}),
-                UpsertRecord::ThreeTuple(t) => Ok(core_data_types::Vector{ id: t.0, values: t.1 , metadata: Some(t.2),  ..Default::default()}),
+                UpsertRecord::TwoTuple((id, values)) => Ok(core_data_types::Vector{ id, values , ..Default::default()}),
+                UpsertRecord::ThreeTuple((id, values, metadata)) => Ok(
+                    core_data_types::Vector{ id, values , metadata: Some(metadata),  ..Default::default()}
+                ),
                 UpsertRecord::Dict(d) => Ok(
                     d.try_into()
                         .map_err(|e| match e{
@@ -43,7 +45,7 @@ pub fn convert_upsert_enum_to_vectors(
                 // TODO: add a dedicated error type, then format this error message in pinecone (the error message is pythonic)
                 UpsertRecord::Other(val) => Err(PineconeClientError::from(
                     core_error::ValueError(format!("Error in vector number {i}: Found unexpected value: {val}.\n\
-                    Allowed types are: Vector; Tuple[str, List[float]]; Tuple[str, List[float], dict]; Dict[str, Any]", i=i, val=val))
+                    Allowed types are: Vector; Tuple[str, List[float]]; Tuple[str, List[float], dict]; Dict[str, Union[str, float, int, List[str]]]", i=i, val=val))
                 ))
 
             };

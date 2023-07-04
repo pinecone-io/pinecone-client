@@ -180,11 +180,37 @@ impl TryFrom<&PyDict> for Vector {
                 .get_item("metadata")
                 .map(|val| {
                     val.extract::<BTreeMap<String, MetadataValue>>()
-                        .map_err(|_| PineconeClientError::UpsertValueError {
-                            key: "metadata".into(),
-                            vec_num: 0,
-                            expected_type: "dict".into(),
-                            actual: format!("{:?}", val),
+                        .or_else(|_| {
+                            val.extract::<&PyDict>()
+                                .map_err(|_| PineconeClientError::UpsertValueError {
+                                    key: "metadata".into(),
+                                    vec_num: 0,
+                                    expected_type: "dict".into(),
+                                    actual: format!("{:?}", val),
+                                })
+                                .and_then(|dict| {
+                                    dict.iter()
+                                        .map(|(k, v)| {
+                                            Ok(
+                                                (k.extract::<String>()
+                                                     .map_err(|_| PineconeClientError::UpsertValueError {
+                                                         key: format!("metadata: {key}", key = k).into(),
+                                                         vec_num: 0,
+                                                         expected_type: "key should be str".into(),
+                                                         actual: format!("{:?}", k),
+                                                })?,
+                                                 v.extract::<MetadataValue>()
+                                                     .map_err(|_| PineconeClientError::UpsertValueError {
+                                                         key: format!("metadata: {key}", key = k).into(),
+                                                         vec_num: 0,
+                                                         expected_type: "Union[str, float, int, List[str]]".into(),
+                                                         actual: format!("{:?}", v),
+                                                })?
+                                                )
+                                            )
+                                        })
+                                        .collect::<Result<_, _>>()
+                                })
                         })
                 })
                 .transpose()?,
