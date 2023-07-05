@@ -1,6 +1,6 @@
 VENV_DIR = .temp_venv
 
-.PHONY: setup venv develop integration-test finish clean
+.PHONY: setup venv develop integration-test-python finish clean
 
 venv: $(VENV_DIR)/bin/activate
 
@@ -9,10 +9,10 @@ $(VENV_DIR)/bin/activate:
 	touch $(VENV_DIR)/bin/activate
 
 develop: venv
-	. $(VENV_DIR)/bin/activate; cd pinecone && pip3 install -e .[test]
+	. $(VENV_DIR)/bin/activate; cd clients/python && pip3 install -e .[test]
 
-integration-test: venv develop
-	. $(VENV_DIR)/bin/activate; cd tests/unit && pytest --self-contained-html --dist=loadscope --numprocesses 4 --durations=10 --durations-min=1.0  --html=report.html
+integration-test-python: venv develop
+	. $(VENV_DIR)/bin/activate; cd clients/python/tests/unit && pytest --self-contained-html --dist=loadscope --numprocesses 4 --durations=10 --durations-min=1.0  --html=report.html
 	$(MAKE) finish
 
 finish: venv

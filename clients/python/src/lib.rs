@@ -14,6 +14,7 @@ use client_sdk::data_types as core_data_types;
 use utils::errors;
 
 #[pymodule]
+#[pyo3(name = "pinecone")]
 fn pinecone(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<Client>()?;
     m.add_class::<core_data_types::Vector>()?;

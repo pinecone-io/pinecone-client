@@ -1,5 +1,5 @@
 [package]
-name = "pinecone"
+name = "pinecone_python_client"
 version.workspace = true
 edition = "2021"
 
@@ -9,11 +9,9 @@ name = "pinecone"
 crate-type = ["cdylib"]
 bench=false
 
-
-
 [dependencies]
 pyo3 = { version = "0.18.0", features = ["extension-module"] }
-client_sdk = {path = "../client_sdk" }
+client_sdk = {path = "../../client_sdk" }
 tokio = { version = "1.16.1", features = ["rt-multi-thread"] }
 reqwest = { version = "0.11.6", features = ["json"] }
 pyo3-asyncio = {version = "0.18.0", features = ["tokio-runtime"]}
