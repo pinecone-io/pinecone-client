@@ -4,8 +4,8 @@ import sys
 from loguru import logger
 from pinecone import Vector, Client, SparseValues
 
-from utils.remote_index import PodType, RemoteIndex
-from utils.utils import index_fixture_factory, retry_assert, sparse_values, get_vector_count, approx_sparse_equals
+from ..utils.remote_index import PodType, RemoteIndex
+from ..utils.utils import index_fixture_factory, retry_assert, sparse_values, get_vector_count, approx_sparse_equals
 
 logger.remove()
 logger.add(sys.stdout, level=(os.getenv("PINECONE_LOGGING") or "INFO"))

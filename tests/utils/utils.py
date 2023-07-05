@@ -8,6 +8,7 @@ import pytest
 import random
 from .remote_index import RemoteIndex
 from _pytest.python_api import approx
+import numpy as np
 
 
 def index_fixture_factory(remote_indices: [(RemoteIndex, str)]):

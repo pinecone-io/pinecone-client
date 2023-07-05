@@ -8,8 +8,8 @@ import pytest
 from loguru import logger
 import asyncio
 
-from utils.remote_index import RemoteIndex, PodType
-from utils.utils import index_fixture_factory, retry_assert
+from ..utils.remote_index import RemoteIndex, PodType
+from ..utils.utils import index_fixture_factory, retry_assert
 
 logger.remove()
 logger.add(sys.stdout, level=(os.getenv("PINECONE_LOGGING") or "INFO"))
@@ -28,6 +28,11 @@ test_data_plane_index = index_fixture_factory(
 )
 
 def get_random_metadata():
+    # return a random value for metadata key 
+    # it can be either a string,float,int, bool or list of strings
+    return np.random.choice(['action', 'documentary', 'drama'], np.random.randint(1, 5),np.random.rand(),[np.random.choice(['action', 'documentary', 'drama']) for _ in range(5)])
+
+def construct_random_metadata():
     base_dict = {
         'some_string': np.random.choice(['action', 'documentary', 'drama']),
         'some_int': np.random.randint(2000, 2021),
@@ -53,7 +58,7 @@ def get_test_data(vector_count=10, no_meta_vector_count=5, dimension=vector_dim)
         for i in range(no_meta_vector_count)
     ]
     meta_vectors: list[Vector] = [
-        Vector(f'mvec{i}', np.random.rand(dimension).tolist(), None, get_random_metadata())
+        Vector(f'mvec{i}', np.random.rand(dimension).tolist(), None, construct_random_metadata())
         for i in range(meta_vector_count)
     ]
     assert len(meta_vectors)==meta_vector_count
@@ -114,6 +119,12 @@ async def async_upload(index, vectors, batch_size):
         res = await task
         total_vectors_upserted += res.upserted_count
     return total_vectors_upserted
+
+
+def test_client_invalid_api_key():
+    with pytest.raises(ConnectionError):
+        # all our api keys have a uuid format
+        pinecone = Client(api_key='invalid_api_key')
 
 
 def test_summarize_no_api_key():
@@ -301,8 +312,7 @@ def test_summarize_with_filter(test_data_plane_index):
 
 def test_invalid_query_params(test_data_plane_index):
     index, _ = test_data_plane_index
-    # TODO : raise proper exception
-    with pytest.raises(Exception) as exc_info:
+    with pytest.raises(TypeError) as exc_info:
         api_response = index.query(top_k=4,
                                    values=[0.1] * vector_dim,
                                    queries=[[0.1] * vector_dim,
@@ -418,26 +428,27 @@ def test_query_simple_with_values_mixed_metadata(test_data_plane_index):
         else:
             assert not match_vector.metadata
 
-# not deterministic
-# def test_query_simple_with_filter_values_metadata(test_data_plane_index):
-#     index, _ = test_data_plane_index
-#     namespace = 'test_query_simple_with_filter_values_metadata'
-#     vector_count = 10
-#     test_data = write_test_data(index, namespace, vector_count)
-#     # simple query - with filter, with data, with metadata
-#     api_response = index.query(
-#         values=[0.1] * vector_dim,
-#         namespace=namespace,
-#         top_k=10,
-#         include_values=True,
-#         include_metadata=True,
-#         filter={'genre': {'$in': ['action']}}
-#     )
-#     logger.debug('got query (with filter, with data, with metadata) response: {}', api_response)
-#     first_match_vector = api_response[0]
-#     assert first_match_vector.values == test_data.get(first_match_vector.id).values
-#     assert first_match_vector.metadata == test_data.get(first_match_vector.id).metadata
-#     assert first_match_vector.metadata.get('genre') == 'action'
+
+def test_query_simple_with_filter_values_metadata(test_data_plane_index):
+    index, _ = test_data_plane_index
+    namespace = 'test_query_simple_with_filter_values_metadata'
+    vector_count = 10
+    test_data = write_test_data(index, namespace, vector_count)
+    api_response = index.query(
+        values=[0.1] * vector_dim,
+        namespace=namespace,
+        top_k=10,
+        include_values=True,
+        include_metadata=True,
+        filter={'genre': {'$in': ['action']}}
+    )
+    logger.debug('got query (with filter, with data, with metadata) response: {}', api_response)
+    if not api_response:
+        pytest.skip('no vectors match the filter')
+    first_match_vector = api_response[0]
+    assert first_match_vector.values == test_data.get(first_match_vector.id).values
+    assert first_match_vector.metadata == test_data.get(first_match_vector.id).metadata
+    assert first_match_vector.metadata.get('genre') == 'action'
 
 
 def test_query_mixed_metadata_sanity(test_data_plane_index):

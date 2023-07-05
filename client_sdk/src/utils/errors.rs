@@ -23,7 +23,7 @@ pub enum PineconeClientError {
     #[error("Failed to connect to Pinecone's controller on region {region}. Please verify client configuration: API key, region and project_id. \
         See more info: https://docs.pinecone.io/docs/quickstart#2-get-and-verify-your-pinecone-api-key\n\
         Underlying Error: {err}")]
-    ControlConnectionError { region: String, err: String },
+    ControlPlaneConnectionError { region: String, err: String },
 
     #[error("Failed to connect to index '{index}'. Please verify that an index with that name exists using `client.list_indexes()`. \n\
         Underlying Error: {err}")]
@@ -79,7 +79,7 @@ impl<T> From<index_service::apis::Error<T>> for PineconeClientError {
             }
             index_service::apis::Error::Reqwest(reqwest_error) => {
                 if reqwest_error.is_connect() {
-                    PineconeClientError::ControlConnectionError {
+                    PineconeClientError::ControlPlaneConnectionError {
                         region: "".into(),
                         err: reqwest_error.to_string(),
                     }

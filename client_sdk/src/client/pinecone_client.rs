@@ -50,8 +50,8 @@ impl PineconeClient {
             None => PineconeClient::get_project_id(&control_plane_client)
                 .await
                 .map_err(|e| match e {
-                    PineconeClientError::ControlConnectionError { err, .. } => {
-                        PineconeClientError::ControlConnectionError {
+                    PineconeClientError::ControlPlaneConnectionError { err, .. } => {
+                        PineconeClientError::ControlPlaneConnectionError {
                             err,
                             region: region.clone(),
                         }

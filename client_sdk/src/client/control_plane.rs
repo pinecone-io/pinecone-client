@@ -135,19 +135,21 @@ impl ControlPlaneClient {
                 "Api key empty or not provided".into(),
             ));
         }
-        let response = rq_client.get(&format!("{}/actions/whoami", self.controller_url))
-            .header("Api-Key",api_key )
+        let response = rq_client
+            .get(&format!("{}/actions/whoami", self.controller_url))
+            .header("Api-Key", api_key)
             .send()
             .await
-            .map_err(|e| {
-                if e.is_connect(){
-                PineconeClientError::ControlConnectionError{ region: "".to_string(), err: e.to_string() }
-            } else {
-                PineconeClientError::Other("Failed to retrieve the user's project_id using `GET /actions/whoami`. Please verify the API key is correct".into()) }
+            .map_err(|e| PineconeClientError::ControlPlaneConnectionError {
+                region: " ".to_string(),
+                err: e.to_string(),
             })?;
-        let json_repsonse = response.json::<WhoamiResponse>()
-            .await
-            .map_err(|_| PineconeClientError::Other("Failed to retrieve the user's project_id using `GET /actions/whoami`. Please verify the API key is correct".into()))?;
+        let json_repsonse = response.json::<WhoamiResponse>().await.map_err(|e| {
+            PineconeClientError::ControlPlaneConnectionError {
+                region: " ".to_string(),
+                err: e.to_string(),
+            }
+        })?;
         Ok(json_repsonse)
     }
 }

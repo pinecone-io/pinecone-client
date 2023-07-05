@@ -25,7 +25,7 @@ impl From<PineconeClientError> for PyErr {
             core_errors::PineconeClientError::ArgumentError { .. } => {
                 exceptions::PyValueError::new_err(err.inner.to_string())
             }
-            core_errors::PineconeClientError::ControlConnectionError { .. } => {
+            core_errors::PineconeClientError::ControlPlaneConnectionError { .. } => {
                 exceptions::PyConnectionError::new_err(err.inner.to_string())
             }
             core_errors::PineconeClientError::IndexConnectionError { .. } => {
