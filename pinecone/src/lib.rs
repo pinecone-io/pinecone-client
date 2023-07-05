@@ -19,6 +19,7 @@ fn pinecone(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<core_data_types::Vector>()?;
     m.add_class::<core_data_types::SparseValues>()?;
     m.add_class::<core_data_types::QueryResult>()?;
+    m.add_class::<core_data_types::UpsertResponse>()?;
     m.add_class::<core_data_types::NamespaceStats>()?;
     m.add_class::<core_data_types::IndexStats>()?;
     m.add(
