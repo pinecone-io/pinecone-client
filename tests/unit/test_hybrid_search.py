@@ -6,6 +6,7 @@ from pinecone import Vector, Client, SparseValues
 
 from utils.remote_index import PodType, RemoteIndex
 from utils.utils import index_fixture_factory, retry_assert, sparse_values, get_vector_count, approx_sparse_equals
+import pytest
 
 logger.remove()
 logger.add(sys.stdout, level=(os.getenv("PINECONE_LOGGING") or "INFO"))
@@ -24,9 +25,12 @@ hybrid_index = index_fixture_factory(
 )
 
 
-def sparse_vector(dimension=32000, nnz=120):
+def sparse_vector(dimension=32000, nnz=120, as_dict: bool = False):
     indices, values = sparse_values(dimension, nnz)
-    return SparseValues(indices=indices, values=values)
+    sv = SparseValues(indices=indices, values=values)
+    if as_dict:
+        return sv.to_dict()
+    return sv
 
 
 def get_test_data(vector_count=10, no_meta_vector_count=5, dimension=vector_dim, sparse=True):
@@ -88,8 +92,8 @@ def test_fetch_vectors_mixed_metadata(hybrid_index):
         assert fetched_vector.metadata == expected_vector.metadata
         assert approx_sparse_equals(fetched_vector.sparse_values, expected_vector.sparse_values)
 
-
-def test_query_simple(hybrid_index):
+@pytest.mark.parametrize("as_dict", [True, False])
+def test_query_simple(hybrid_index, as_dict):
     index, _ = hybrid_index
     namespace = 'test_query_simple'
     vector_count = 100
@@ -111,7 +115,7 @@ def test_query_simple(hybrid_index):
 
     hybrid_query_response = index.query(
         values=[0.1] * vector_dim,
-        sparse_values=sparse_vector(),
+        sparse_values=sparse_vector(as_dict=as_dict),
         namespace=namespace,
         top_k=10,
         include_values=False,
@@ -120,6 +124,31 @@ def test_query_simple(hybrid_index):
 
     assert dense_query_response != hybrid_query_response
 
+unallowed_sparse_values = [
+    ("str", "some string"),
+    ("list", [1, 2, 3]),
+    ("empty dict", {}),
+    ("empty list", []),
+    ("empty string", ""),
+    ("int", 1),
+    ("float", 1.0),
+    ("bool", True),
+    ("tuple", (1, 2, 3)),
+    ("set", {1, 2, 3}),
+    ("missing keys", {"indices": [1, 2, 3]}),
+    ("misspelled keys", {"indicies": [1, 2, 3], "values": [0.1, 0.2, 0.3]}),
+]
+@pytest.mark.parametrize("val", [v for _, v in unallowed_sparse_values], ids=[k for k, _ in unallowed_sparse_values])
+def test_unallowed_query_params(hybrid_index, val):
+    index, _ = hybrid_index
+    with pytest.raises(ValueError):
+        index.query(
+            values=[0.1] * vector_dim,
+            sparse_values=val,
+            top_k=10,
+            include_values=False,
+            include_metadata=False,
+        )
 
 def test_query_simple_with_include_values(hybrid_index):
     index, _ = hybrid_index

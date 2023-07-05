@@ -34,6 +34,14 @@ impl SparseValues {
             values = &self.values.chunks(5).next().unwrap_or(&Vec::<f32>::new())
         ))
     }
+
+    pub fn to_dict<'a>(&self, py: Python<'a>) -> &'a PyDict {
+        let key_vals: Vec<(&str, PyObject)> = vec![
+            ("indices", self.indices.to_object(py)),
+            ("values", self.values.to_object(py)),
+        ];
+        key_vals.into_py_dict(py)
+    }
 }
 
 #[derive(Debug, Default, Clone)]
