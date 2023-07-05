@@ -279,7 +279,6 @@ asyncio.run(async_upload(index, vectors, batch_size=100))
 # In a jupyter notebook, asyncio.run() is not supported. Instead, use
 await async_upload(index, vectors, batch_size=100)  
 ```
-
 # Limitations
 
 ## Code completion and type hints

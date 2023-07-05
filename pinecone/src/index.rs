@@ -26,6 +26,11 @@ impl Index {
         format!("Index: \"{name}\"", name = self.inner.name)
     }
 
+    #[getter]
+    pub fn name(&self) -> String {
+        self.inner.name.clone()
+    }
+
     #[pyo3(signature = (vectors, namespace="", async_req=false))]
     #[pyo3(text_signature = "(vectors, namespace='', async_req=False)")]
     /// The `Upsert` operation writes vectors into a namespace.

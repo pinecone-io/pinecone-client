@@ -1,0 +1,36 @@
+name: Long-standing connection test
+
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 'pypy3.9' 
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install Build Dependencies
+        run: sudo apt-get -y update && sudo apt-get -y install pkg-config libssl-dev clang
+      - name: Install protoc
+        run: sudo apt install -y protobuf-compiler libprotobuf-dev
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/unit/requirements.txt
+
+      - name: Run long-standing connection test
+        run: |
+          pytest tests/grpc/test_multi_thread.py
+            make long-running-test
