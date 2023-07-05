@@ -191,23 +191,28 @@ impl TryFrom<&PyDict> for Vector {
                                 .and_then(|dict| {
                                     dict.iter()
                                         .map(|(k, v)| {
-                                            Ok(
-                                                (k.extract::<String>()
-                                                     .map_err(|_| PineconeClientError::UpsertValueError {
-                                                         key: format!("metadata: {key}", key = k).into(),
-                                                         vec_num: 0,
-                                                         expected_type: "key should be str".into(),
-                                                         actual: format!("{:?}", k),
+                                            Ok((
+                                                k.extract::<String>().map_err(|_| {
+                                                    PineconeClientError::UpsertValueError {
+                                                        key: format!("metadata: {key}", key = k)
+                                                            .into(),
+                                                        vec_num: 0,
+                                                        expected_type: "key should be str".into(),
+                                                        actual: format!("{:?}", k),
+                                                    }
                                                 })?,
-                                                 v.extract::<MetadataValue>()
-                                                     .map_err(|_| PineconeClientError::UpsertValueError {
-                                                         key: format!("metadata: {key}", key = k).into(),
-                                                         vec_num: 0,
-                                                         expected_type: "Union[str, float, int, List[str]]".into(),
-                                                         actual: format!("{:?}", v),
-                                                })?
-                                                )
-                                            )
+                                                v.extract::<MetadataValue>().map_err(|_| {
+                                                    PineconeClientError::UpsertValueError {
+                                                        key: format!("metadata: {key}", key = k)
+                                                            .into(),
+                                                        vec_num: 0,
+                                                        expected_type:
+                                                            "Union[str, float, int, List[str]]"
+                                                                .into(),
+                                                        actual: format!("{:?}", v),
+                                                    }
+                                                })?,
+                                            ))
                                         })
                                         .collect::<Result<_, _>>()
                                 })
