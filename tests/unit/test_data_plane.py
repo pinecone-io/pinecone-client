@@ -203,6 +203,49 @@ def test_invalid_upsert_vectors_wrong_dimension(test_data_plane_index):
     assert "dimension" in str(exc_info.value)
 
 
+unallowed_metdata_values = [
+    ("list of int",     [1, 2, 3],                            False),
+    ("list of float",   [1.0, 2.2, 3.34],                     False),
+    ("tuple",           (1, 2, 3),                            False),
+    ("set",             {1, 2, 3},                            True),
+    ("None",            None,                                 True),
+    ("dict",            {'key': 'value'},                     False),
+    ("Object",          Vector(id='vec1', values=[0.1] * 50), True),
+]
+@pytest.mark.parametrize("dtype, val, detected_by_client", unallowed_metdata_values, ids=[dtype for dtype, _, _ in unallowed_metdata_values])
+def test_invalid_metadata_types(test_data_plane_index, dtype, val, detected_by_client):
+    index, _ = test_data_plane_index
+    error = TypeError if detected_by_client else PineconeOpError
+    with pytest.raises(error) as exc_info:
+        api_response = index.upsert(
+            vectors=[
+                Vector(id='vec1', values=[0.1] * vector_dim),
+                Vector(id='vec2', values=[0.2] * vector_dim, metadata={'bad_key': val}),
+            ],
+            namespace='ns1',
+        )
+    err_msg = str(exc_info.value).lower()
+    assert "metadata" in err_msg
+    logger.debug('got expected exception: {}', exc_info.value)
+
+
+@pytest.mark.parametrize("dtype, val, detected_by_client", unallowed_metdata_values, ids=[dtype for dtype, _, _ in unallowed_metdata_values])
+def test_invalid_metadata_types_as_dict(test_data_plane_index, dtype, val, detected_by_client):
+    index, _ = test_data_plane_index
+    error = ValueError if detected_by_client else PineconeOpError
+    with pytest.raises(error) as exc_info:
+        api_response = index.upsert(
+            vectors=[
+                Vector(id='vec1', values=[0.1] * vector_dim),
+                {'id': 'vec2', 'values': [0.2] * vector_dim, 'metadata': {'bad_key': val}},
+            ],
+            namespace='ns1',
+        )
+    err_msg = str(exc_info.value).lower()
+    assert "metadata" in err_msg
+    assert "bad_key" in err_msg
+    logger.debug('got expected exception: {}', exc_info.value)
+
 def test_fetch_vectors_no_metadata(test_data_plane_index):
     index, _ = test_data_plane_index
     namespace = 'test_fetch_vectors_no_metadata'
