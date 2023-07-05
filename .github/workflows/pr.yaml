@@ -3,8 +3,8 @@ name: Pull-request CI
 on: pull_request
 
 env:
-  PINECONE_REGION: internal-beta
-  PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY_BETA }}
+  PINECONE_REGION: eu-west1-gcp
+  PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY_EU }}
 
 jobs:
   rust-tests:
