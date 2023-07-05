@@ -52,3 +52,26 @@ pub fn convert_upsert_enum_to_vectors(
         }).collect::<Result<Vec<_>, _>>()?;
     Ok(vectors_to_upsert)
 }
+
+#[derive(FromPyObject, Debug, Clone)]
+pub enum SparseVector<'a> {
+    SparseValues(core_data_types::SparseValues),
+    Dict(&'a PyDict),
+    #[pyo3(transparent)]
+    Other(&'a PyAny), // This extraction never fails
+}
+impl TryFrom<SparseVector<'_>> for core_data_types::SparseValues {
+    type Error = PineconeClientError;
+
+    fn try_from(vec: SparseVector) -> Result<Self, Self::Error> {
+        match vec {
+            SparseVector::SparseValues(v) => Ok(v),
+            SparseVector::Dict(d) => d.try_into()
+                .map_err(PineconeClientError::from),
+            SparseVector::Other(val) => Err(PineconeClientError::from(
+                core_error::ValueError(format!("Found unexpected value: {val}.\n\
+                Allowed types are: SparseValues; Dict[str, Union[int, float]]", val=val))
+            ))
+        }
+    }
+}

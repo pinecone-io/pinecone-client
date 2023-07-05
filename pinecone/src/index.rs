@@ -1,4 +1,5 @@
-use crate::data_types::convert_upsert_enum_to_vectors;
+
+use crate::data_types::{convert_upsert_enum_to_vectors, SparseVector};
 use crate::data_types::UpsertRecord;
 use crate::utils::errors::{PineconeClientError, PineconeResult};
 use client_sdk::data_types as core_data_types;
@@ -110,7 +111,7 @@ impl Index {
     /// Args:
     ///     top_k (int): The number of results to return for each query.
     ///     values (Optional[List[float]]): The values for a new, unseen query vector. This should be the same length as the dimension of the index being queried. The results will be the `top_k` vectors closest to the given vector. Can not be used together with `id`.
-    ///     sparse_values (Optional[SparseValues]): The query vector's sparse values.
+    ///     sparse_values (Optional[Union[SparseValues, Dict[str, Union[int, float]]]): The query vector's sparse values.
     ///     namespace (Optional[str]): Optional namespace in which vectors will be queried.
     ///     filter (Optional[dict]): The filter to apply. You can use vector metadata to limit your search. See <https://www.pinecone.io/docs/metadata-filtering/>
     ///     include_values (bool): Indicates whether vector values are included in the response.
@@ -123,7 +124,7 @@ impl Index {
         &mut self,
         top_k: i32,
         values: Option<Vec<f32>>,
-        sparse_values: Option<core_data_types::SparseValues>,
+        sparse_values: Option<SparseVector>,
         namespace: &str,
         filter: Option<BTreeMap<String, core_data_types::MetadataValue>>,
         include_values: bool,
@@ -135,7 +136,7 @@ impl Index {
         let res = self.runtime.block_on(self.inner.query(
             namespace,
             values,
-            sparse_values,
+            sparse_values.map(|x| x.try_into()).transpose()?,
             top_k as u32,
             filter,
             include_values,
