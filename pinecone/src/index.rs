@@ -1,6 +1,5 @@
-
-use crate::data_types::{convert_upsert_enum_to_vectors, SparseVector};
 use crate::data_types::UpsertRecord;
+use crate::data_types::{convert_upsert_enum_to_vectors, SparseVector};
 use crate::utils::errors::{PineconeClientError, PineconeResult};
 use client_sdk::data_types as core_data_types;
 use client_sdk::index as core_index;

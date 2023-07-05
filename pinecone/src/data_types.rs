@@ -66,12 +66,14 @@ impl TryFrom<SparseVector<'_>> for core_data_types::SparseValues {
     fn try_from(vec: SparseVector) -> Result<Self, Self::Error> {
         match vec {
             SparseVector::SparseValues(v) => Ok(v),
-            SparseVector::Dict(d) => d.try_into()
-                .map_err(PineconeClientError::from),
-            SparseVector::Other(val) => Err(PineconeClientError::from(
-                core_error::ValueError(format!("Found unexpected value: {val}.\n\
-                Allowed types are: SparseValues; Dict[str, Union[int, float]]", val=val))
-            ))
+            SparseVector::Dict(d) => d.try_into().map_err(PineconeClientError::from),
+            SparseVector::Other(val) => {
+                Err(PineconeClientError::from(core_error::ValueError(format!(
+                    "Found unexpected value: {val}.\n\
+                Allowed types are: SparseValues; Dict[str, Union[int, float]]",
+                    val = val
+                ))))
+            }
         }
     }
 }
