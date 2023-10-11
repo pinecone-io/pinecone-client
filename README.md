@@ -1,20 +1,15 @@
-<h1 align="center">
-  <img src="https://avatars.githubusercontent.com/u/54333248?s=200&v=4">
-    <br>
-    Pinecone Client V3
-    <br>
-</h1>
 
-A python client for Pinecone. For more information, see the docs at https://www.pinecone.io/docs/
+## Pinecone Client (Beta)
+
+> **_⚠️ Warning_**
+>
+> The client is in **public preview** ("Beta") version.  The API may change prior to launch. For production applications, use the official [Python client](https://github.com/pinecone-io/pinecone-python-client).
+
 
 Pinecone Client V3 is based on pre-compiled Rust code and gRPC, aimed at improving performance and stability.
 Using native gRPC transport, client V3 is able to achieve a 2x-3x speedup for vector upsert over the previous RESTful client versions, as well as a 10-20% speedup for vector query latency.
 As the client installation is fully self-contained, it does not require any additional dependencies (e.g. `grpcio`), making it easier to install and use in any Python environment.
 
-> **_⚠️ Warning_**
->
-> This is a **public preview** ("Beta") version. Please test it thoroughly before using it in production.    
-> Some functionalities are not backwards compatible with the previous versions of the client. Refer to the [CHANGELOG.md](CHANGELOG.md) for more details.
 
 ## Installation
 

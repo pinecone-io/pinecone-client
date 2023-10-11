@@ -16,7 +16,7 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "Intended Audience :: System Administrators",
-    "License :: Other/Proprietary License",
+    "License :: OSI Approved :: Apache Software License",
     "Topic :: Database",
     "Topic :: Software Development",
     "Topic :: Software Development :: Libraries",
