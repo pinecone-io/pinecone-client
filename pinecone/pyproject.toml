@@ -1,12 +1,33 @@
+[tool.poetry]
+name = "pinecone-client-experimental"
+version = "0.1.0"
+description = "Pinecone Client implemented with Rust"
+authors = ["Pinecone Systems, Inc. <support@pinecone.io>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+
+[tool.poetry.dev-dependencies]
+maturin = "^0.13.2"
+loguru = "0.6.0"
+numpy = "1.24.2"
+pytest = "6.2.5"
+pytest-asyncio = "0.16.0"
+pytest-timeout = "1.4.2"
+pytest-html = "3.1.1"
+requests = "2.25.1"
+testcontainers = "3.4.1"
+inflection = "0.5.1"
+
 [build-system]
 requires = ["maturin>=0.14,<0.15"]
 build-backend = "maturin"
 
 [project]
 version = "3.0.0rc2" # TODO: remove this key completely once we have a stable release. Version is taken automatically from Cargo.toml.
-name = "pinecone-client"
-description="Pinecone client and SDK"
-requires-python = ">=3.7"
+name = "pinecone-client-experimental"
+description="Experimental pinecone client"
+requires-python = ">=3.8"
 keywords=["Pinecone", "vector", "database", "cloud"]
 classifiers = [
     "Programming Language :: Rust",
@@ -25,18 +46,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[project.optional-dependencies]
-test = [
-    "loguru==0.6.0",
-    "numpy==1.24.2",
-    "pytest==6.2.5",
-    "pytest-asyncio==0.16.0",
-    "pytest-timeout==1.4.2",
-    "pytest-html==3.1.1",
-    "pytest-xdist[psutil]==2.5.0",
-    "requests==2.25.1",
-    "testcontainers==3.4.1",
-    "inflection==0.5.1",
-]
-
-
+[project.urls]
+homepage = "https://github.com/pinecone-io/pinecone-client"
+repository = "https://github.com/pinecone-io/pinecone-client"
+documentation = "https://docs.pinecone.io"
