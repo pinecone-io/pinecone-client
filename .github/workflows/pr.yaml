@@ -36,7 +36,8 @@ jobs:
           python-version: '3.9'
       - name: Setup Poetry
         uses: ./.github/actions/setup-poetry
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
       - name: Install Build Dependencies
         run: sudo apt-get -y update && sudo apt-get -y install pkg-config libssl-dev clang
       - name: Install protoc
