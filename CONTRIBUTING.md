@@ -33,7 +33,9 @@
     brew install openssl
     ```
    
-4. **Generate OpenAPI client** (Optional, usually done automatically at build time)
+4. **Install [poetry](https://python-poetry.org/)**
+5. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+5. **Generate OpenAPI client** (Optional, usually done automatically at build time)
    
    Pinecone uses an OpenAPI spec for control-plane operations like `create_index()`. The OpenAPI client is automatically generated using [openapi-generator](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/rust-server.md) during project build.
    This process uses Docker to `docker run` OpenAPI's generator image.  
@@ -41,39 +43,56 @@
    Simply extract the `index_service.zip` file into the `index_service/` folder at the root of the project.
 
 ## Building from source
-### Python package
-#### Using the pyproject.toml file
+
+After you have installed prerequisites above, you can run 
+
 ```bash
-# Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install as editable package
-cd pinecone 
-pip install -e .
-
-# optionallly, install test dependencies and run tests:
-pip install -e .[test]
-pytest ../tests/unit
+make build
 ```
-#### Using `maturin`
+
+This command will do several things:
+- Generate updated openapi client code (via docker in `make generate-index-service`)
+- Build the rust code into a python module (via `make build-python` which invokes `maturin develop`)
+- Install the built module in the venv managed by poetry (maturin handles this as well)
+- Install python dependencies used in testing via `poetry install`
+
+Depending on the situation, you may sometimes want to perform these actions individually. But if you're just getting started you probably want to run all of these steps.
+
+## Run the tests
+
+Rust tests:
+```
+PINECONE_API_KEY='foo' PINECONE_REGION='bar' cargo test -p pinecone -p client_sdk
+```
+
+Python tests:
+
 ```bash
-# Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install maturin
-pip install maturin
-
-# Install pinecone package for development
-cd pinecone
-maturin develop
+PINECONE_API_KEY='foo' PINECONE_REGION='bar' make integration-test
 ```
+
+### Try out the python module in an interactive repl session
+
+```bash
+poetry run python3
+```
+
+This drops you into an interactive session where the development module can be imported from and experimented with
+
+```python
+>>> from pinecone import Client
+>>> Client()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: `Please provide a valid API key or set the 'PINECONE_API_KEY' environment variable`
+>>>
+```
+
 #### Building a wheel for deployment
 ```bash
-cd pinecone
-maturin build --release
+make release
 ```
+
 ### Building rust library for linking with other languages
 ```bash
 cargo build

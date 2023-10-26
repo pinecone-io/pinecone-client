@@ -6,6 +6,14 @@ install:
 build-python:
 	cd pinecone; poetry run maturin develop
 
+release:
+	cd pinecone; poetry run maturin build --release
+
+build: generate-index-service install build-python
+
+run:
+	poetry run python3
+
 integration-test: install
 	poetry run pytest --self-contained-html --durations=10 --durations-min=1.0  --html=tests/unit/report.html tests/unit 
 
