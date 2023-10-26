@@ -41,9 +41,9 @@ jobs:
         run: sudo apt-get -y update && sudo apt-get -y install pkg-config libssl-dev clang
       - name: Install protoc
         run: sudo apt install -y protobuf-compiler libprotobuf-dev
-      - name: Build
+      - name: Build (maturin develop)
         shell: bash
-        run: make build
+        run: make build-python
       - name: Run integration tests
         run:
           make integration-test
