@@ -2,11 +2,12 @@
 
 ## Install dependencies
 
-1. **Install [Rust compiler](https://www.rust-lang.org/tools/install)**
+1. Install [Rust compiler](https://www.rust-lang.org/tools/install)
     ```bash
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     ```
-2. **Install [protobuf compiler](https://grpc.io/docs/protoc-installation/)**
+
+2. Install [protobuf compiler](https://grpc.io/docs/protoc-installation/)
    ```bash
    # Linux
     sudo apt-get install protobuf-compiler
@@ -20,8 +21,8 @@
    ```bash
    export PROTOC=/path/to/protoc
    ```
-
-3. **Install lib-ssl**
+   
+3. Install `lib-ssl`
 
    If you are getting an error like `Could not find directory of OpenSSL installation`, you need to install lib-ssl.
     #### linux
@@ -33,14 +34,10 @@
     brew install openssl
     ```
    
-4. **Install [poetry](https://python-poetry.org/)**
+4. Install [`poetry`](https://python-poetry.org/)
+
 5. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-5. **Generate OpenAPI client** (Optional, usually done automatically at build time)
-   
-   Pinecone uses an OpenAPI spec for control-plane operations like `create_index()`. The OpenAPI client is automatically generated using [openapi-generator](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/rust-server.md) during project build.
-   This process uses Docker to `docker run` OpenAPI's generator image.  
-   **If you don't have docker installed, or you don't want to use docker** -  you can download the generated code from the [latest release](https://github.com/pinecone-io/pinecone-client/releases). 
-   Simply extract the `index_service.zip` file into the `index_service/` folder at the root of the project.
+
 
 ## Building from source
 
