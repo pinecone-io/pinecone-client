@@ -6,6 +6,6 @@
 > or maintained. We are leaving it up for anyone who may 
 > be depending on it, but currently we encourage python
 > users to use the official python client developed at 
-> [pinecone-io/pinecone-python-client](https://github.com/)
+> [pinecone-io/pinecone-python-client](https://github.com/pinecone-io/pinecone-python-client)
 
-If you understand the risks and wish to continue, you can find the old [README here](./LEGACY-README.md).
+If you understand the risks and wish to continue, you can find the [old README here](./LEGACY-README.md).
