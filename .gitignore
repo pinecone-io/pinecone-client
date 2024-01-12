@@ -17,3 +17,6 @@ my_scripts
 
 # autogen control plane code 
 index_service/
+
+# Test reports
+report.html
